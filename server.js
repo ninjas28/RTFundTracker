@@ -15,7 +15,7 @@ app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/live/:quote", function (request, response) {
-  var SYMBOL = request.params['quote'];
+  var SYMBOL = request.params['quote'].toUpperCase();
   
   finance.snapshot({
     fields: ['s', 'n', 'd1', 'l1', 'y', 'r'] ,
