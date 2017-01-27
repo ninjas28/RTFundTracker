@@ -6,21 +6,14 @@
 
 $(function() {
   console.log('hello world :o');
-  
-  $.get('/dreams', function(dreams) {
-    dreams.forEach(function(dream) {
-      $('<li></li>').text(dream).appendTo('ul#dreams');
-    });
-  });
+});
 
-  $('form').submit(function(event) {
-    event.preventDefault();
-    var dream = $('input').val();
-    $.post('/dreams?' + $.param({dream: dream}), function() {
-      $('<li></li>').text(dream).appendTo('ul#dreams');
-      $('input').val('');
-      $('input').focus();
-    });
-  });
-
+jQuery('#search').on('input propertychange paste', function(event) {
+  var URL = "live/" + $("#search").val();
+  var request = new XMLHttpRequest();
+  request.open("GET", URL, false);
+  request.send(null);
+  var jsonResponse = request.responseText;
+  console.log(jsonResponse);
+  console.log(event);
 });
