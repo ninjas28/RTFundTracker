@@ -1,0 +1,215 @@
+doctype html
+html
+  - var title = 'Home'
+  - var username = user.name.givenName
+  include includes/head.pug
+  script var g_data = !{data};
+  body
+    .demo-layout.mdl-layout.mdl-js-layout.mdl-layout--fixed-drawer.mdl-layout--fixed-header
+      include includes/headernav.pug
+      main.mdl-layout__content.mdl-color--grey-100
+        .mdl-grid.demo-content
+          .demo-charts.mdl-color--white.mdl-shadow--2dp.mdl-cell.mdl-cell--12-col.mdl-grid
+            .mdl-cell.mdl-cell--4-col.mdl-cell--3-col-desktop.g1.chart
+            .mdl-cell.mdl-cell--4-col.mdl-cell--3-col-desktop.g2
+            .mdl-cell.mdl-cell--4-col.mdl-cell--3-col-desktop.g3
+            .mdl-cell.mdl-cell--4-col.mdl-cell--3-col-desktop.g4
+            include includes/putgraph.pug
+            script.
+              putGraph('.g1', {empty: 56, gain: 44, loss: 00});
+              putGraph('.g2', {empty: 44, gain: 00, loss: 56});
+              putGraph('.g3', {empty: 19, gain: 81, loss: 00});
+              putGraph('.g4', {empty: 81, gain: 00, loss: 19});
+          #searchresults.mdl-color--white.mdl-shadow--2dp.mdl-cell.mdl-cell--6-offset.mdl-cell--3-col.mdl-grid(style='position:fixed; z-index:-1')
+          .demo-graphs.mdl-shadow--2dp.mdl-color--white.mdl-cell.mdl-cell--8-col
+            
+          .demo-cards.mdl-cell.mdl-cell--4-col.mdl-cell--8-col-tablet.mdl-grid.mdl-grid--no-spacing
+            .demo-updates.mdl-card.mdl-shadow--2dp.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-tablet.mdl-cell--12-col-desktop
+              .mdl-card__title.mdl-card--expand.mdl-color--teal-300
+                h2.mdl-card__title-text Updates
+              .mdl-card__supporting-text.mdl-color-text--grey-600  Non dolore elit adipisicing ea reprehenderit consectetur culpa.
+              .mdl-card__actions.mdl-card--border
+                a.mdl-button.mdl-js-button.mdl-js-ripple-effect(href='#') Read More
+            .demo-separator.mdl-cell--1-col
+            .demo-options.mdl-card.mdl-color--deep-purple-500.mdl-shadow--2dp.mdl-cell.mdl-cell--4-col.mdl-cell--3-col-tablet.mdl-cell--12-col-desktop
+              .mdl-card__supporting-text.mdl-color-text--blue-grey-50
+                h3 View options
+                ul
+                  li
+                    label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect(for='chkbox1')
+                      input#chkbox1.mdl-checkbox__input(type='checkbox')
+                      |  
+                      span.mdl-checkbox__label Click per object
+                  li
+                    label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect(for='chkbox2')
+                      input#chkbox2.mdl-checkbox__input(type='checkbox')
+                      |  
+                      span.mdl-checkbox__label Views per object
+                  li
+                    label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect(for='chkbox3')
+                      input#chkbox3.mdl-checkbox__input(type='checkbox')
+                      |  
+                      span.mdl-checkbox__label Objects selected
+                  li
+                    label.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect(for='chkbox4')
+                      input#chkbox4.mdl-checkbox__input(type='checkbox')
+                      |  
+                      span.mdl-checkbox__label Objects viewed
+              .mdl-card__actions.mdl-card--border
+                a.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-color-text--blue-grey-50(href='#') Change location
+                .mdl-layout-spacer
+                |  
+                i.material-icons location_on
+    svg(xmlns='http://www.w3.org/2000/svg', xmlns:xlink='http://www.w3.org/1999/xlink', version='1.1', style='position: fixed; left: -1000px; height: -1000px;')
+      defs
+        mask#piemask(maskcontentunits='objectBoundingBox')
+          circle(cx='0.5', cy='0.5', r='0.49', fill='white')
+          circle(cx='0.5', cy='0.5', r='0.40', fill='black')
+        g#piechart
+          circle(cx='0.5', cy='0.5', r='0.5')
+          path(d='M.5.5.5 0A.5.5 0 0 1 .95.28z', stroke='none', fill='rgba(255, 255, 255, 0.75)')
+    svg(version='1.1', xmlns='http://www.w3.org/2000/svg', xmlns:xlink='http://www.w3.org/1999/xlink', viewbox='0 0 500 250', style='position: fixed; left: -1000px; height: -1000px;')
+      defs
+        g#chart
+          g#Gridlines
+            line(fill='#888888', stroke='#888888', stroke-miterlimit='10', x1='0', y1='27.3', x2='468.3', y2='27.3')
+            line(fill='#888888', stroke='#888888', stroke-miterlimit='10', x1='0', y1='66.7', x2='468.3', y2='66.7')
+            line(fill='#888888', stroke='#888888', stroke-miterlimit='10', x1='0', y1='105.3', x2='468.3', y2='105.3')
+            line(fill='#888888', stroke='#888888', stroke-miterlimit='10', x1='0', y1='144.7', x2='468.3', y2='144.7')
+            line(fill='#888888', stroke='#888888', stroke-miterlimit='10', x1='0', y1='184.3', x2='468.3', y2='184.3')
+          g#Numbers
+            text(transform='matrix(1 0 0 1 485 29.3333)', fill='#888888', font-family="'Roboto'", font-size='9') 500
+            text(transform='matrix(1 0 0 1 485 69)', fill='#888888', font-family="'Roboto'", font-size='9') 400
+            text(transform='matrix(1 0 0 1 485 109.3333)', fill='#888888', font-family="'Roboto'", font-size='9') 300
+            text(transform='matrix(1 0 0 1 485 149)', fill='#888888', font-family="'Roboto'", font-size='9') 200
+            text(transform='matrix(1 0 0 1 485 188.3333)', fill='#888888', font-family="'Roboto'", font-size='9') 100
+            text(transform='matrix(1 0 0 1 0 249.0003)', fill='#888888', font-family="'Roboto'", font-size='9') 1
+            text(transform='matrix(1 0 0 1 78 249.0003)', fill='#888888', font-family="'Roboto'", font-size='9') 2
+            text(transform='matrix(1 0 0 1 154.6667 249.0003)', fill='#888888', font-family="'Roboto'", font-size='9')  3
+            text(transform='matrix(1 0 0 1 232.1667 249.0003)', fill='#888888', font-family="'Roboto'", font-size='9')  4
+            text(transform='matrix(1 0 0 1 309 249.0003)', fill='#888888', font-family="'Roboto'", font-size='9') 5
+            text(transform='matrix(1 0 0 1 386.6667 249.0003)', fill='#888888', font-family="'Roboto'", font-size='9')  6
+            text(transform='matrix(1 0 0 1 464.3333 249.0003)', fill='#888888', font-family="'Roboto'", font-size='9')  7
+          g#Layer_5
+            polygon(opacity='0.36', stroke-miterlimit='10', points='0,223.3 48,138.5 154.7,169 211,88.5\
+            294.5,80.5 380,165.2 437,75.5 469.5,223.3 	')
+          g#Layer_4
+            polygon(stroke-miterlimit='10', points='469.3,222.7 1,222.7 48.7,166.7 155.7,188.3 212,132.7\
+            296.7,128 380.7,184.3 436.7,125 	')
+            
+    include includes/usersettings.pug
+    
+    script(src='https://code.getmdl.io/1.3.0/material.min.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js')
+    script.
+      $(function(){
+      var selector = '.here'
+      // Define margins
+      var margin = {top: 20, right: 20, bottom: 20, left: 40},
+      width = parseInt(d3.select(selector).style("width")) - margin.left - margin.right,
+      height = (parseInt(d3.select(selector).style("width"))/2) - margin.top - margin.bottom;
+      // Define date parser
+      var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+      // Define scales
+      var xScale = d3.time.scale().range([0, width]);
+      var yScale = d3.scale.linear().range([height, 0]);
+      var color = d3.scale.category10();
+      // Define axes
+      var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+      var yAxis = d3.svg.axis().scale(yScale).orient("left");
+      // Define lines
+      var line = d3.svg.line().interpolate("basis")
+      .x(function(d) { return xScale(d["date"]); })
+      .y(function(d) { return yScale(d["concentration"]); });
+      // Define svg canvas
+      var svg = d3.select(selector)
+      .append('svg')
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      console.log(height);
+      // Read in data
+      d3.csv("giniLine.csv", function(error, data){
+      if (error) throw error;
+      // Set the color domain equal to the three product categories
+      var productCategories = d3.keys(data[0]).filter(function(key){return (key !== "Order Month") && (key !== "metric")})
+      color.domain(productCategories);
+      // console.log(JSON.stringify(data, null, 2)) // to view the structure
+      // Format the data field
+      data.forEach(function(d){
+      d["Order Month"] = parseDate(d["Order Month"])
+      });
+      // Filter the data to only include a single metric
+      var subset = data.filter(function(el) {return el.metric === "Quantity" });
+      // console.log(JSON.stringify(subset, null, 2))
+      // Reformat data to make it more copasetic for d3
+      // data = An array of objects
+      // concentrations = An array of three objects, each of which contains an array of objects
+      var concentrations = productCategories.map(function(category){
+      return {category: category, datapoints: subset.map(function(d){
+      return {date: d["Order Month"], concentration: +d[category]}
+      })}
+      })
+      // console.log(JSON.stringify(concentrations, null, 2)) // to view the structure
+      // Set the domain of the axes
+      xScale.domain(d3.extent(subset, function(d) {return d["Order Month"]; }));
+      yScale.domain([0.25, 0.5]);
+      // Place the axes on the chart
+      svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+      svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+      .append("text")
+      .attr("class", "label")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .attr("dx", ".71em")
+      .style("text-anchor", "beginning")
+      .text("Product Concentration");
+      var products = svg.selectAll(".category")
+      .data(concentrations)
+      .enter().append("g")
+      .attr("class", "category");
+      products.append("path")
+      .attr("class", "line")
+      .attr("d", function(d) {return line(d.datapoints); })
+      .style("stroke", function(d) {return color(d.category); });
+      // console.log(JSON.stringify(d3.values(concentrations), null, 2)) // to view the structure
+      console.log(d3.values(concentrations)); // to view the structure
+      console.log(concentrations);
+      // console.log(concentrations.map(function()))
+      });
+      // Define responsive behavior
+      function resize() {
+      var width = parseInt(d3.select(selector).style("width")) - margin.left - margin.right,
+      height = (parseInt(d3.select(selector).style("width"))/2) - margin.top - margin.bottom;
+      // Update the range of the scale with new width/height
+      xScale.range([0, width]);
+      yScale.range([height, 0]);
+      // Update the axis and text with the new scale
+      svg.attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      svg.select('.x.axis')
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+      svg.select('.y.axis')
+      .call(yAxis);
+      // Force D3 to recalculate and update the line
+      svg.selectAll('.line')
+      .attr("d", function(d) { return line(d.datapoints); });
+      // Update the tick marks
+      xAxis.ticks(Math.max(width/75, 2));
+      yAxis.ticks(Math.max(height/50, 2));
+      };
+      // Call the resize function whenever a resize event occurs
+      d3.select(window).on('resize', resize);
+      // Call the resize function
+      resize();
+      });
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js', integrity='sha256-1qeNeAAFNi/g6PFChfXQfa6CQ8eXoHXreohinZsoJOQ=', crossorigin='anonymous')
+    script(src='/client.js')

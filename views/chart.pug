@@ -1,0 +1,71 @@
+doctype html
+html
+  head
+    script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js")
+
+    script(type='text/javascript').
+      google.charts.load('current', {'packages':['line']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('date');
+      data.addColumn('number', 'High');
+      data.addColumn({type: 'string', role: 'tooltip'});
+      data.addColumn('number', 'Low');
+      data.addColumn({type: 'string', role: 'tooltip'});
+      data.addColumn('number', 'MKT Close');
+      data.addColumn({type: 'string', role: 'tooltip'});
+      $.get( "/stocks/past/aapl/1456819200000/today", function( json ) {
+      var stock = json[0].symbol
+      var dataArray = [];
+      console.log(json);
+      for (datem of json){
+          dataArray.push([new Date(datem.date),datem.high, '$' + String(datem.high), datem.low,'$' + String(datem.low), datem.adjClose,'$' + String(datem.adjClose) ])
+      }
+      console.log(dataArray)
+      
+      
+      data.addRows(dataArray);
+
+      var options = {
+        chart: {
+          title: stock,
+          subtitle: 'in dollars (USD)'
+        },series: {
+          1: {
+            color:'green'
+          },
+          2: {
+            color:'red'
+          },
+          0: {
+            color:'grey'
+          }
+        }
+      };
+
+      var chart = new google.charts.Line(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+        $(window).resize(function() {
+          chart.draw(data, options);
+        })
+      })
+      }
+      
+      //function drawChart() {
+      //$.get( "/stocks/past/aapl/1456819200000/today", function( json ) {
+      //    var data = new google.visualization.DataTable(json);
+      //
+      //  // Instantiate and draw our chart, passing in some options.
+      //    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      //    chart.draw(data, {width: 400, height: 240});
+      //  })
+      //};
+          
+      // Create our data table out of JSON data loaded from server.
+      
+  body
+    #chart_div(style="width:80vw; height:50vh")

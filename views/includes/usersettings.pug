@@ -1,0 +1,30 @@
+dialog.mdl-dialog
+  h5.mdl-dialog__title Settings
+    .mdl-dialog__content
+      h6 Graph Display Settings
+      label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='switch-1')
+        input#switch-1.mdl-switch__input(type='checkbox', checked='')
+        span.mdl-switch__label A setting
+      |  
+      label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='switch-2')
+        input#switch-2.mdl-switch__input(type='checkbox')
+        span.mdl-switch__label Another setting
+    .mdl-dialog__actions.mdl-dialog__actions
+      button.mdl-button.save(type='button') Save
+      |  
+      button.mdl-button.close(type='button') Close
+  script.
+    var dialog = document.querySelector('dialog');
+    var showDialogButton = document.querySelector('#show-settings');
+    if (! dialog.showModal) {
+    dialogPolyfill.registerDialog(dialog);
+    }
+    showDialogButton.addEventListener('click', function() {
+    dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function() {
+    dialog.close();
+    });
+    dialog.querySelector('.save').addEventListener('click', function() {
+    $('button.save').text('Saved!');
+    });

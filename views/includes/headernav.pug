@@ -1,0 +1,65 @@
+header.demo-header.mdl-layout__header.mdl-color--grey-100.mdl-color-text--grey-600
+  .mdl-layout__header-row
+    span.mdl-layout-title #{title}
+       if stitle
+        span : #{stitle}
+    .mdl-layout-spacer
+    .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
+      label.mdl-button.mdl-js-button.mdl-button--icon#searchbutton(for='search')
+        i.material-icons search
+      .mdl-tooltip.mdl-tooltip--left(data-mdl-for='searchbutton')  Search for a <br> stock symbol
+      .mdl-textfield__expandable-holder
+        input#search.mdl-textfield__input(type='text')
+        |  
+        label.mdl-textfield__label(for='search') Enter a stock symbol...
+    |  
+    a#hdrbtn.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--icon
+      i.material-icons more_vert
+    ul.mdl-menu.mdl-js-menu.mdl-js-ripple-effect.mdl-menu--bottom-right(for='hdrbtn')
+      li.mdl-menu__item About
+      li.mdl-menu__item Contact
+      li.mdl-menu__item Legal information
+.demo-drawer.mdl-layout__drawer.mdl-color--blue-grey-900.mdl-color-text--blue-grey-50
+  header.demo-drawer-header
+    img.demo-avatar(src= user.picture)
+    .demo-avatar-dropdown
+      span Hello #{username}!
+      .mdl-layout-spacer
+      |  
+      a#accbtn.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--icon
+        i.material-icons(role='presentation') arrow_drop_down
+        |  
+        span.visuallyhidden Options
+      ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect(for='accbtn')
+        a.mdl-menu__item#show-settings
+          i.material-icons settings
+          | Settings
+        a.mdl-menu__item(href='/logout')
+          i.material-icons power_settings_new
+          | Sign out
+  nav.demo-navigation.mdl-navigation.mdl-color--blue-grey-800
+    if home
+      a.mdl-navigation__link(href='#')
+        i.mdl-color-text--blue-grey-400.material-icons(role='presentation') home
+        | Home
+    else
+      a.mdl-navigation__link(href='/')
+        i.mdl-color-text--blue-grey-400.material-icons(role='presentation') home
+        | Home
+      
+    a.mdl-navigation__link(href='inbox')
+      i.mdl-color-text--blue-grey-400.material-icons.mdl-badge.mdl-badge--overlap(data-badge='3', role='presentation') inbox
+      | Inbox
+      
+    a.mdl-navigation__link(href='updates')
+      i.mdl-color-text--blue-grey-400.material-icons.mdl-badge.mdl-badge--overlap(data-badge='7', role='presentation') flag
+      | Updates
+      
+    a.mdl-navigation__link(href='purchases')
+      i.mdl-color-text--blue-grey-400.material-icons(role='presentation') monetization_on
+      | Purchases
+    .mdl-layout-spacer
+    |  
+    a.mdl-navigation__link(href='')
+      i.mdl-color-text--blue-grey-400.material-icons(role='presentation') help_outline
+      span.visuallyhidden Help

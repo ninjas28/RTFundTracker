@@ -5,34 +5,94 @@
 var express = require('express');
 var app = express();
 
-var finance = require('yahoo-finance');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var asyncLib = require('async');
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
-var session = require('express-session');
+var pug = require('pug');
 
-app.use(session({ secret: 'keyboard cat' }));
-app.use(passport.initialize());
-app.use(passport.session({secret: 'rtfundsecret'}));
+//oauth stuff
+var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn();
+var session = require('express-session');
+var dotenv = require('dotenv');
+var passport = require('passport');
+var Auth0Strategy = require('passport-auth0');
+
+//database stuff
+var Sequelize = require('sequelize');
+
+//routes
+var stocks = require('./stockRoutes');
+var loggedIn = require('./loggedInRoutes');
+
+dotenv.load();
+
+app.set('view engine', 'pug');
+//app.use(session({ secret: process.env.SESSIONSECRET }));
 app.use(flash());
 
-//authentication scheme
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    passport.User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
+var people =  {
+  somePerson: {
+    stocks:[
+      {
+        symbol:'TXN',
+        long: 'Texas Instuments Inc.',
+        purchased: 'Jan 3, 2017'
+      },
+    ]
   }
-));
+}
+
+//Database setup
+var sequelize = new Sequelize('database', process.env.DB_USER, process.env.DB_PASS, {
+  host: '0.0.0.0',
+  dialect: 'sqlite',
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 10000
+  },
+    // Security note: the database is saved to the file `database.sqlite` on the local filesystem. It's deliberately placed in the `.data` directory
+    // which doesn't get copied if someone remixes the project.
+  storage: '.data/database.sqlite'
+});
+
+var strategy = new Auth0Strategy({
+    domain:       process.env.AUTH0_DOMAIN,
+    clientID:     process.env.AUTH0_CLIENT_ID,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    callbackURL:  process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback'
+  }, 
+                                 function(accessToken, refreshToken, extraParams, profile, done) {
+    // accessToken is the token to call Auth0 API (not needed in the most cases)
+    // extraParams.id_token has the JSON Web Token
+    // profile has all the information from the user
+    return done(null, profile);
+  });
+
+passport.use(strategy);
+
+// you can use this section to keep a smaller payload
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+app.use(session({
+  secret: 'shhhhhhhhh',
+  resave: true,
+  saveUninitialized: true
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+var env = {
+  AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
+  AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
+  AUTH0_CALLBACK_URL: process.env.AUTH0_CALLBACK_URL
+};
 
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
@@ -40,63 +100,29 @@ passport.use(new LocalStrategy(
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
-app.post('/login',
-  passport.authenticate('local', { successRedirect: '/',
-                                   failureRedirect: '/login',
-                                   failureFlash: true })
-);
+app.use('/stocks', stocks);
 
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/views/index.html');
-});
-
-app.get("/d3test", function(request, response) {
-  response.sendFile(__dirname + '/views/d3_test.html');
+app.get('/chart', function(req, res){
+  res.render('chart')
 })
-
-app.get("/purchases", function (request, response) {
-  response.sendFile(__dirname + '/views/purchases.html');
-});
 
 app.get("/login", function (request, response) {
-  response.sendFile(__dirname + '/views/login.html');
-});
-app.get('/test/url', function (request, response){
-  request.originalUrl
-  response.json({query:request.query, request: request.originalUrl});
-})
-app.get("/live/multiple", function (request, response) {
-  console.log(request.query.stocks);
-  asyncLib.map(request.query.stocks, getStock, function(err, results){
-    if (err){
-      response.json(err);
-    }else{
-    response.json(results);
-    }
-  });
-  function getStock(stock, callback){
-    return finance.snapshot({
-      fields: ['s', 'n', 'd1', 'l1', 'y', 'r'] ,
-      symbol: stock.toUpperCase()
-    }, function (err, snapshot) {
-      if (err) { callback(err);}
-      console.log(snapshot);
-      callback(null, snapshot);
-    });
-  }
+  response.render('login', { env: env });
 });
 
-app.get("/live/:quote", function (request, response) {
-  var SYMBOL = request.params['quote'].toUpperCase();
-  
-  finance.snapshot({
-    fields: ['s', 'n', 'd1', 'l1', 'y', 'r'] ,
-    symbol: SYMBOL
-  }, function (err, snapshot) {
-    if (err) { throw err; }
-    response.send(JSON.stringify(snapshot, null, 2));
-  });
+app.get('/logout', function(request, response){
+  request.logout();
+  response.redirect('/login');
 });
+
+app.get('/callback',
+  passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }),
+  function(req, res) {
+    console.log(`${req.user.name.givenName} has logged in`);
+    res.redirect(req.session.returnTo || '/');
+  });
+
+app.use('/', ensureLoggedIn, loggedIn)
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
