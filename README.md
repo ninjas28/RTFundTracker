@@ -1,4 +1,6 @@
 Welcome to the R + T Fund Finance Tracker
+
+[![Build Status](https://travis-ci.org/ninjas28/RTFundTracker.svg?branch=master)](https://travis-ci.org/ninjas28/RTFundTracker)
 =========================
 The goal of this project is to create a simple and easy to use web interface for checking in on the status of your finance in the R + T fund.
 
